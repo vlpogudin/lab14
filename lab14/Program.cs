@@ -46,32 +46,38 @@ namespace lab14
 
                                 case 3:
                                     Console.Clear();
-                                    Request1(gameStore); // Первый запрос
+                                    Request1_LINQ(gameStore); // Первый запрос через LINQ
+                                    Request1_ExMethod(gameStore); // Первый запрос через метод расширения
                                     break;
 
                                 case 4:
                                     Console.Clear();
-                                    Request2(gameStore); // Второй запрос
+                                    Request2_LINQ(gameStore); // Второй запрос через LINQ
+                                    Request2_ExMethod(gameStore); // Второй запрос через метод расширения
                                     break;
 
                                 case 5:
                                     Console.Clear();
-                                    Request3(gameStore); // Третий запрос
+                                    Request3_LINQ(gameStore); // Третий запрос через LINQ
+                                    Request3_ExMethod(gameStore); // Третий запрос через метод расширения
                                     break;
 
                                 case 6:
                                     Console.Clear();
-                                    Request4(gameStore); // Четвертый запрос
+                                    Request4_LINQ(gameStore); // Четвертый запрос через LINQ
+                                    Request4_ExMethod(gameStore); // Четвертый запрос через метод расширения
                                     break;
 
                                 case 7:
                                     Console.Clear();
-                                    Request5(gameStore); // Пятый запрос
+                                    Request5_LINQ(gameStore); // Пятый запрос через LINQ
+                                    Request5_ExMethod(gameStore); // Пятый запрос через метод расширения
                                     break;
 
                                 case 8:
                                     Console.Clear();
-                                    Request6(gameStore); // Шестой запрос
+                                    Request6_LINQ(gameStore); // Шестой запрос через LINQ
+                                    Request6_ExMethod(gameStore); // Шестой запрос через метод расширения
                                     break;
 
                                 case 9:
@@ -222,10 +228,10 @@ namespace lab14
 
         #region Первый запрос (оператор where)
         /// <summary>
-        /// Первый запрос для коллекции. Используется оператор Where.
+        /// Первый запрос для коллекции. Используется оператор Where. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request1(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request1_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только элементы, являющиеся настольной игрой и требующие дополнительных атрибутов
@@ -233,6 +239,20 @@ namespace lab14
                       from game in item
                       where game is BoardGame && ((BoardGame)game).ReqSpecBoard == true
                       select game;
+            PrintRequest1(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Первый запрос для коллекции. Используется оператор Where. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request1_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Запоминаем только элементы, являющиеся настольной игрой и требующие дополнительных атрибутов
+            var res = gameStore.Values
+                      .SelectMany(item => item)
+                      .Where(game => game is BoardGame && ((BoardGame)game).ReqSpecBoard == true);
             PrintRequest1(res); // Вызов метода печати результата на экран
         }
 
@@ -254,10 +274,33 @@ namespace lab14
 
         #region Второй запрос (оператор intersect)
         /// <summary>
-        /// Второй запрос для коллекции. Используется оператор Intersect.
+        /// Второй запрос для коллекции. Используется оператор Intersect. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request2(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request2_LINQ(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Запоминаем только названия элементов, являющихся видео-игрой
+            var boardGames = from item in gameStore.Values
+                             from game in item
+                             where game is BoardGame
+                             select game.Name;
+
+            // Запоминаем только названия элементов, являющихся VR-игрой
+            var vrGames = from item in gameStore.Values
+                          from game in item
+                          where game is VRGame
+                          select game.Name;
+
+            var res = boardGames.Intersect(vrGames); // Находим пересечение множеств
+            PrintRequest2(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Второй запрос для коллекции. Используется оператор Intersect. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request2_ExMethod(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только названия элементов, являющихся видео-игрой
@@ -267,8 +310,8 @@ namespace lab14
 
             // Запоминаем только названия элементов, являющихся VR-игрой
             var vrGames = gameStore.SelectMany(games => games.Value)
-                                   .Where(game => game is VRGame)
-                                   .Select(game => game.Name);
+                          .Where(game => game is VRGame)
+                          .Select(game => game.Name);
 
             var res = boardGames.Intersect(vrGames); // Находим пересечение множеств
             PrintRequest2(res); // Вызов метода печати результата на экран
@@ -292,16 +335,32 @@ namespace lab14
 
         #region Третий запрос (оператор max)
         /// <summary>
-        /// Третий запрос для коллекции. Используется оператор Max.
+        /// Третий запрос для коллекции. Используется оператор Max. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request3(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request3_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем максимальное количество игроков из всех игр
             var res = (from games in gameStore.Values
                        from game in games
                        select game.MaxCount).Max();
+
+            PrintRequest3(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Третий запрос для коллекции. Используется оператор Max. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request3_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Запоминаем максимальное количество игроков из всех игр
+            var res = gameStore.Values
+                      .SelectMany(games => games)
+                      .Select(game => game.MaxCount)
+                      .Max();
 
             PrintRequest3(res); // Вызов метода печати результата на экран
         }
@@ -320,16 +379,31 @@ namespace lab14
 
         #region Четвертый запрос (оператор group by)
         /// <summary>
-        /// Четвертый запрос для коллекции. Используется оператор Group by.
+        /// Четвертый запрос для коллекции. Используется оператор Group by. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request4(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request4_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Группировка игр по названию
             var res = from games in gameStore.Values
                       from game in games
                       group game by game.Name;
+
+            PrintRequest4(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Четвертый запрос для коллекции. Используется оператор Group by. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request4_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Группировка игр по названию
+            var res = gameStore.Values
+                      .SelectMany(games => games)
+                      .GroupBy(game => game.Name);
 
             PrintRequest4(res); // Вызов метода печати результата на экран
         }
@@ -355,10 +429,10 @@ namespace lab14
 
         #region Пятый запрос (оператор let)
         /// <summary>
-        /// Пятый запрос для коллекции. Используется оператор Let.
+        /// Пятый запрос для коллекции. Используется оператор Let. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request5(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request5_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Дополнительные вычисления разницы между количеством игроков
@@ -370,6 +444,25 @@ namespace lab14
                           Name = game.Name,
                           CountDifference = countDifference
                       };
+
+            PrintRequest5(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Пятый запрос для коллекции. Используется оператор Let. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request5_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Дополнительные вычисления разницы между количеством игроков
+            var res = gameStore.Values
+                      .SelectMany(games => games)
+                      .Select(game =>
+                      {
+                          int countDifference = game.MaxCount - game.MinCount;
+                          return new { Name = game.Name, CountDifference = countDifference };
+                      });
 
             PrintRequest5(res); // Вызов метода печати результата на экран
         }
@@ -391,10 +484,10 @@ namespace lab14
 
         #region Шестой запрос (оператор join)
         /// <summary>
-        /// Шестой запрос для коллекции. Используется оператор Join.
+        /// Шестой запрос для коллекции. Используется оператор Join. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request6(SortedDictionary<string, List<Game>> gameStore)
+        public static void Request6_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
             if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
 
@@ -412,6 +505,31 @@ namespace lab14
                 game => game.Name,
                 gifts => gifts.Name,
                 (game, gifts) => new { Id = game.id, Name = game.Name, Gifts = gifts.Gifts });
+
+            PrintRequest6(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Шестой запрос для коллекции. Используется оператор Join. Метод расширения.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        public static void Request6_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        {
+            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
+
+            // Массив подарков
+            Gift[] gifts =
+            {
+                new Gift("Minecraft", "Джойстик, брелок"), new Gift("CS VR", "VR-джойстики"),
+                new Gift("Салки", "Перчатки, кепка"), new Gift("Шахматы", "Поле для шахмат, часы"),
+                new Gift("Монополия", "Фишки, кубик, карты"), new Gift("Уно", "Брелок, маска")
+            };
+
+            // Соединение коллекций
+            var res = from kv in gameStore
+                      from game in kv.Value
+                      join gift in gifts on game.Name equals gift.Name
+                      select new { Id = game.id, Name = game.Name, Gifts = gift.Gifts };
 
             PrintRequest6(res); // Вызов метода печати результата на экран
         }

@@ -1,7 +1,6 @@
 using GameLib;
 using lab14;
 using MyCollectionAVLTree;
-using System.Linq;
 
 namespace UnitTestProgram { }
 
@@ -44,25 +43,25 @@ public class UnitTestProgramMethods
 
     #region Тесты первого запроса
     /// <summary>
-    /// Тест первого запроса к пустой коллекции.
+    /// Тест первого запроса к пустой коллекции. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest1_EmptyCollection()
+    public void TestCollectionRequest1_EmptyCollection_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(gameStore); // Первый запрос к коллекции
+        Program.Request1_LINQ(gameStore); // Первый запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
     
     /// <summary>
-    /// Тест первого запроса к коллекции, не содержащей корректных элементов.
+    /// Тест первого запроса к коллекции, не содержащей корректных элементов. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest1_NoExistCorrectItems()
+    public void TestCollectionRequest1_NoExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -73,17 +72,17 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(gameStore); // Первый запрос к коллекции
+        Program.Request1_LINQ(gameStore); // Первый запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("В коллекции нет таких игр.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест первого запроса к коллекции, содержащей корректные элементы.
+    /// Тест первого запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest1_ExistCorrectItems()
+    public void TestCollectionRequest1_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -94,34 +93,32 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(gameStore); // Первый запрос к коллекции
+        Program.Request1_LINQ(gameStore); // Первый запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains(new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты").ToString())); // Проверка, что выведено корректное сообщение
     }
-    #endregion
 
-    #region Тесты второго запроса
     /// <summary>
-    /// Тест второго запроса к пустой коллекции.
+    /// Тест первого запроса к пустой коллекции. Метод расширения.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest2_EmptyCollection()
+    public void TestCollectionRequest1_EmptyCollection_ExMethod()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(gameStore); // Запрос к коллекции
+        Program.Request1_ExMethod(gameStore); // Первый запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест второго запроса к коллекции, не содержащей корректных элементов.
+    /// Тест первого запроса к коллекции, не содержащей корректных элементов. Метод расширения.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest2_NoExistCorrectItems()
+    public void TestCollectionRequest1_NoExistCorrectItems_ExMethod()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -132,17 +129,76 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(gameStore); // Запрос к коллекции
+        Program.Request1_ExMethod(gameStore); // Первый запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("В коллекции нет таких игр.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест первого запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest1_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new BoardGame("Игра Г", 6, 9, 5, false, "Атрибуты")
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request1_ExMethod(gameStore); // Первый запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains(new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты").ToString())); // Проверка, что выведено корректное сообщение
+    }
+    #endregion
+
+    #region Тесты второго запроса
+    /// <summary>
+    /// Тест второго запроса к пустой коллекции. LINQ.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest2_EmptyCollection_LINQ()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к коллекции, не содержащей корректных элементов. LINQ.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest2_NoExistCorrectItems_LINQ()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new Game("Игра А", 1, 5, 1), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("В коллекции нет таких названий.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест второго запроса к коллекции, содержащей корректные элементы.
+    /// Тест второго запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest2_ExistCorrectItems()
+    public void TestCollectionRequest2_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -153,7 +209,64 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(gameStore); // Запрос к коллекции
+        Program.Request2_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Игра А")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к пустой коллекции. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest2_EmptyCollection_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к коллекции, не содержащей корректных элементов. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest2_NoExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new Game("Игра А", 1, 5, 1), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("В коллекции нет таких названий.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest2_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new VRGame("Игра А", 6, 9, 5, "Часы", 6, true, true)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_ExMethod(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Игра А")); // Проверка, что выведено корректное сообщение
@@ -162,25 +275,25 @@ public class UnitTestProgramMethods
 
     #region Тесты третьего запроса
     /// <summary>
-    /// Тест третьего запроса к пустой коллекции.
+    /// Тест третьего запроса к пустой коллекции. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest3_EmptyCollection()
+    public void TestCollectionRequest3_EmptyCollection_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request3(gameStore); // Запрос к коллекции
+        Program.Request3_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест третьего запроса к коллекции, содержащей корректные элементы.
+    /// Тест третьего запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest3_ExistCorrectItems()
+    public void TestCollectionRequest3_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -191,7 +304,43 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request3(gameStore); // Запрос к коллекции
+        Program.Request3_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("9")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест третьего запроса к пустой коллекции. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest3_EmptyCollection_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request3_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест третьего запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest3_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new VRGame("Игра А", 6, 9, 5, "Часы", 6, true, true)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request3_ExMethod(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("9")); // Проверка, что выведено корректное сообщение
@@ -200,25 +349,25 @@ public class UnitTestProgramMethods
 
     #region Тесты четвертого запроса
     /// <summary>
-    /// Тест четвертого запроса к пустой коллекции.
+    /// Тест четвертого запроса к пустой коллекции. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest4_EmptyCollection()
+    public void TestCollectionRequest4_EmptyCollection_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request4(gameStore); // Запрос к коллекции
+        Program.Request4_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест четвертого запроса к коллекции, содержащей корректные элементы.
+    /// Тест четвертого запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest4_ExistCorrectItems()
+    public void TestCollectionRequest4_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -229,7 +378,46 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request4(gameStore); // Запрос к коллекции
+        Program.Request4_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Игра А")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("Игра Б")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("Игра В")); // Проверка, что выведено корректное сообщение
+        Assert.IsFalse(consoleOutput.Contains("Игра Г")); // Проверка, что не выведено некорректное сообщение
+    }
+
+    /// <summary>
+    /// Тест четвертого запроса к пустой коллекции. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest4_EmptyCollection_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request4_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест четвертого запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest4_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new VRGame("Игра А", 6, 9, 5, "Часы", 6, true, true)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request4_ExMethod(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Игра А")); // Проверка, что выведено корректное сообщение
@@ -241,25 +429,25 @@ public class UnitTestProgramMethods
 
     #region Тесты пятого запроса
     /// <summary>
-    /// Тест пятого запроса к пустой коллекции.
+    /// Тест пятого запроса к пустой коллекции. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest5_EmptyCollection()
+    public void TestCollectionRequest5_EmptyCollection_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request5(gameStore); // Запрос к коллекции
+        Program.Request5_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест пятого запроса к коллекции, содержащей корректные элементы.
+    /// Тест пятого запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest5_ExistCorrectItems()
+    public void TestCollectionRequest5_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -270,7 +458,46 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request5(gameStore); // Запрос к коллекции
+        Program.Request5_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Разница в количестве игроков: 4")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("Разница в количестве игроков: 5")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("Разница в количестве игроков: 1")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("Разница в количестве игроков: 3")); // Проверка, что не выведено некорректное сообщение
+    }
+
+    /// <summary>
+    /// Тест пятого запроса к пустой коллекции. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest5_EmptyCollection_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request5_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест пятого запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest5_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new VRGame("Игра А", 6, 9, 5, "Часы", 6, true, true)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request5_ExMethod(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Разница в количестве игроков: 4")); // Проверка, что выведено корректное сообщение
@@ -282,25 +509,25 @@ public class UnitTestProgramMethods
 
     #region Тесты шестого запроса
     /// <summary>
-    /// Тест шестого запроса к пустой коллекции.
+    /// Тест шестого запроса к пустой коллекции. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest6_EmptyCollection()
+    public void TestCollectionRequest6_EmptyCollection_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request6(gameStore); // Запрос к коллекции
+        Program.Request6_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест шестого запроса к коллекции, не содержащей корректных элементов.
+    /// Тест шестого запроса к коллекции, не содержащей корректных элементов. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest6_NoExistCorrectItems()
+    public void TestCollectionRequest6_NoExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -311,17 +538,17 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request6(gameStore); // Запрос к коллекции
+        Program.Request6_LINQ(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Результат запроса пуст.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест шестого запроса к коллекции, содержащей корректные элементы.
+    /// Тест шестого запроса к коллекции, содержащей корректные элементы. LINQ.
     /// </summary>
     [TestMethod]
-    public void TestCollectionRequest6_ExistCorrectItems()
+    public void TestCollectionRequest6_ExistCorrectItems_LINQ()
     {
         SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -332,7 +559,64 @@ public class UnitTestProgramMethods
         gameStore.Add("Игры", games); // Добавляем список в коллекцию
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request6(gameStore); // Запрос к коллекции
+        Program.Request6_LINQ(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("ID: 1, Игра: Шахматы, В подарок: Поле для шахмат, часы")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест шестого запроса к пустой коллекции. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest6_EmptyCollection_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request6_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Коллекция не заполнена элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест шестого запроса к коллекции, не содержащей корректных элементов. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest6_NoExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new Game("Игра А", 1, 5, 1), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request6_ExMethod(gameStore); // Запрос к коллекции
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Результат запроса пуст.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест шестого запроса к коллекции, содержащей корректные элементы. Метод расширения.
+    /// </summary>
+    [TestMethod]
+    public void TestCollectionRequest6_ExistCorrectItems_ExMethod()
+    {
+        SortedDictionary<string, List<Game>> gameStore = new SortedDictionary<string, List<Game>>(); // Создание коллекции коллекций
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Шахматы", 1, 5, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new VRGame("Игра А", 6, 9, 5, "Часы", 6, true, true)
+        };
+        gameStore.Add("Игры", games); // Добавляем список в коллекцию
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request6_ExMethod(gameStore); // Запрос к коллекции
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("ID: 1, Игра: Шахматы, В подарок: Поле для шахмат, часы")); // Проверка, что выведено корректное сообщение
