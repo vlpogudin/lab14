@@ -46,14 +46,18 @@ namespace lab14
 
                                 case 3:
                                     Console.Clear();
-                                    Request1_LINQ(gameStore); // Первый запрос через LINQ
-                                    Request1_ExMethod(gameStore); // Первый запрос через метод расширения
+                                    var res1LINQ = ActivateRequest(gameStore, Request1_LINQ); // Первый запрос через LINQ
+                                    PrintRequest1(res1LINQ); // Печать результата первого запроса LINQ
+                                    var res1ExMethod = ActivateRequest(gameStore, Request1_ExMethod); // Первый запрос через метод расширения
+                                    PrintRequest1(res1ExMethod); // Печать результата первого запроса метода расширения
                                     break;
 
                                 case 4:
                                     Console.Clear();
-                                    Request2_LINQ(gameStore); // Второй запрос через LINQ
-                                    Request2_ExMethod(gameStore); // Второй запрос через метод расширения
+                                    var res2LINQ = ActivateRequest(gameStore, Request2_LINQ); // Второй запрос через LINQ
+                                    PrintRequest2(res2LINQ); // Второй запрос через метод расширения
+                                    var res2ExMethod = ActivateRequest(gameStore, Request2_ExMethod); // Второй запрос через метод расширения
+                                    PrintRequest2(res2ExMethod); // Печать результата второго запроса метода расширения
                                     break;
 
                                 case 5:
@@ -114,22 +118,28 @@ namespace lab14
 
                                 case 3:
                                     Console.Clear();
-                                    Request1(tree); // Первый запрос
+                                    var res1LINQ = ActivateRequestTree(tree, Request1_LINQ); // Первый запрос через LINQ
+                                    PrintTreeRequest1(res1LINQ); // Печать результата первого запроса LINQ
+                                    var res1ExMethod = ActivateRequestTree(tree, Request1_ExMethod); // Первый запрос через метод расширения
+                                    PrintTreeRequest1(res1ExMethod); // Печать результата первого запроса метод расширения
                                     break;
 
                                 case 4:
                                     Console.Clear();
-                                    Request2(tree); // Второй запрос
+                                    Request2_ExMethod(tree); // Второй запрос метод расширения
+                                    Request2_LINQ(tree); // Второй запрос LINQ
                                     break;
 
                                 case 5:
                                     Console.Clear();
-                                    Request3(tree); // Третий запрос
+                                    Request3_ExMethod(tree); // Третий запрос метод расширения
+                                    Request3_LINQ(tree); // Третий запрос LINQ
                                     break;
 
                                 case 6:
                                     Console.Clear();
-                                    Request4(tree); // Четвертый запрос
+                                    Request4_ExMethod(tree); // Четвертый запрос метод расширения
+                                    Request4_LINQ(tree); // Четвертый запрос LINQ
                                     break;
 
                                 case 7:
@@ -231,38 +241,37 @@ namespace lab14
         /// Первый запрос для коллекции. Используется оператор Where. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request1_LINQ(SortedDictionary<string, List<Game>> gameStore)
+        public static IEnumerable<Game> Request1_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
-            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только элементы, являющиеся настольной игрой и требующие дополнительных атрибутов
             var res = from item in gameStore.Values
                       from game in item
                       where game is BoardGame && ((BoardGame)game).ReqSpecBoard == true
                       select game;
-            PrintRequest1(res); // Вызов метода печати результата на экран
+            return res; // Вызов метода печати результата на экран
         }
 
         /// <summary>
         /// Первый запрос для коллекции. Используется оператор Where. Метод расширения.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request1_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        public static IEnumerable<Game> Request1_ExMethod(SortedDictionary<string, List<Game>> gameStore)
         {
-            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только элементы, являющиеся настольной игрой и требующие дополнительных атрибутов
             var res = gameStore.Values
                       .SelectMany(item => item)
                       .Where(game => game is BoardGame && ((BoardGame)game).ReqSpecBoard == true);
-            PrintRequest1(res); // Вызов метода печати результата на экран
+            return res; // Вызов метода печати результата на экран
         }
 
         /// <summary>
         /// Печать результата первого запроса.
         /// </summary>
         /// <param name="res">Результат выполнения первого запроса.</param>
-        public static void PrintRequest1(IEnumerable<Game> res)
+        public static void PrintRequest1(IEnumerable<Game>? res)
         {
-            if (!res.Any()) { Console.WriteLine("В коллекции нет таких игр.\n"); return; } // Если подходящих элементов не найдено, выход из метода
+            if (res == null) { return; } // Если результат пуст, выход из метода
+            else if (!res.Any()) { Console.WriteLine("В коллекции нет таких игр.\n"); return; } // Если подходящих элементов не найдено, выход из метода
             UI.ChangeColor("Настольные игры, в которых требуются дополнительные атрибуты:", ConsoleColor.Green);
             foreach (var item in res) // Перебор всех элементов результата
             {
@@ -277,9 +286,8 @@ namespace lab14
         /// Второй запрос для коллекции. Используется оператор Intersect. LINQ.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request2_LINQ(SortedDictionary<string, List<Game>> gameStore)
+        public static IEnumerable<string> Request2_LINQ(SortedDictionary<string, List<Game>> gameStore)
         {
-            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только названия элементов, являющихся видео-игрой
             var boardGames = from item in gameStore.Values
                              from game in item
@@ -293,16 +301,15 @@ namespace lab14
                           select game.Name;
 
             var res = boardGames.Intersect(vrGames); // Находим пересечение множеств
-            PrintRequest2(res); // Вызов метода печати результата на экран
+            return res; // Вызов метода печати результата на экран
         }
 
         /// <summary>
         /// Второй запрос для коллекции. Используется оператор Intersect. Метод расширения.
         /// </summary>
         /// <param name="gameStore">Коллекция коллекций.</param>
-        public static void Request2_ExMethod(SortedDictionary<string, List<Game>> gameStore)
+        public static IEnumerable<string> Request2_ExMethod(SortedDictionary<string, List<Game>> gameStore)
         {
-            if (IsEmptyCollection(gameStore)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только названия элементов, являющихся видео-игрой
             var boardGames = gameStore.SelectMany(games => games.Value)
                              .Where(game => game is BoardGame)
@@ -314,16 +321,17 @@ namespace lab14
                           .Select(game => game.Name);
 
             var res = boardGames.Intersect(vrGames); // Находим пересечение множеств
-            PrintRequest2(res); // Вызов метода печати результата на экран
+            return res; // Вызов метода печати результата на экран
         }
 
         /// <summary>
         /// Печать результата второго запроса.
         /// </summary>
         /// <param name="res">Результат выполнения второго запроса.</param>
-        public static void PrintRequest2(IEnumerable<string> res)
+        public static void PrintRequest2(IEnumerable<string>? res)
         {
-            if (!res.Any()) { Console.WriteLine("В коллекции нет таких названий.\n"); return; } // Если подходящих элементов не найдено, выход из метода
+            if (res == null) { return; } // Если результат пуст, выход из метода
+            else if (!res.Any()) { Console.WriteLine("В коллекции нет таких названий.\n"); return; } // Если подходящих элементов не найдено, выход из метода
             UI.ChangeColor("Одинаковые названия, которые есть в видео-играх и VR-играх:", ConsoleColor.Green);
             foreach (var item in res) // Перебор всех элементов результата
             {
@@ -585,6 +593,21 @@ namespace lab14
             }
                 
         }
+
+        // Делегат для хранения ссылок на запросы
+        public delegate dynamic RequestHandler(SortedDictionary<string, List<Game>> gameStore);
+
+        /// <summary>
+        /// Метод обработки переданного запроса (метода) с коллекцией.
+        /// </summary>
+        /// <param name="gameStore">Коллекция коллекций.</param>
+        /// <param name="method">Метод для выполнения.</param>
+        /// <returns>Результат выполнения метода.</returns>
+        public static dynamic ActivateRequest(SortedDictionary<string, List<Game>> gameStore, RequestHandler method)
+        {
+            if (IsEmptyCollection(gameStore)) { return null; } // Если коллекция пуста, возврат null
+            return method(gameStore); // Возврат выполнения запроса
+        }
         #endregion
         #endregion
 
@@ -643,24 +666,37 @@ namespace lab14
 
         #region Первый запрос (оператор where)
         /// <summary>
-        /// Первый запрос. Используется оператор Where.
+        /// Первый запрос. Используется оператор Where. Метод расширения.
         /// </summary>
         /// <param name="tree">АВЛ-дерево.</param>
-        public static void Request1(MyAVLTree<Game> tree)
+        public static IEnumerable<Game> Request1_ExMethod(MyAVLTree<Game> tree)
         {
-            if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только настольные игры, в которых разница в кол-ве игроков больше 10000
             var res = tree.Where(game => game.MaxCount - game.MinCount > 10000 && game is BoardGame);
-            PrintTreeRequest1(res); // Вызов метода печати результата на экран
+            return res; // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Первый запрос. Используется оператор Where. LINQ.
+        /// </summary>
+        /// <param name="tree">АВЛ-дерево.</param>
+        public static IEnumerable<Game> Request1_LINQ(MyAVLTree<Game> tree)
+        {
+            // Запоминаем только настольные игры, в которых разница в кол-ве игроков больше 10000
+            var res = from item in tree
+                      where item is BoardGame && item.MaxCount - item.MinCount > 10000
+                      select item;
+            return res; // Вызов метода печати результата на экран
         }
 
         /// <summary>
         /// Печать результата первого запроса.
         /// </summary>
         /// <param name="res">Результат выполнения первого запроса.</param>
-        public static void PrintTreeRequest1(IEnumerable<Game> res)
+        public static void PrintTreeRequest1(IEnumerable<Game>? res)
         {
-            if (!res.Any()) { Console.WriteLine("В дереве нет таких игр.\n"); return; } // Если подходящих элементов не найдено, выход из метода
+            if (res == null) { return; } // Если результат пуст, выходим из метода
+            else if (!res.Any()) { Console.WriteLine("В дереве нет таких игр.\n"); return; } // Если подходящих элементов не найдено, выход из метода
             UI.ChangeColor("Настольные игры, в которых разница в кол-ве игроков больше 10000:", ConsoleColor.Green);
             foreach (var item in res) // Перебор всех элементов результата
             {
@@ -672,16 +708,30 @@ namespace lab14
 
         #region Второй запрос (оператор сount)
         /// <summary>
-        /// Второй запрос. Используется оператор Count.
+        /// Второй запрос. Используется оператор Count. LINQ.
         /// </summary>
         /// <param name="tree">АВЛ-дерево.</param>
-        public static void Request2(MyAVLTree<Game> tree)
+        public static void Request2_LINQ(MyAVLTree<Game> tree)
         {
             if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
             // Запоминаем только видео-игры, в которых устройство для игры - PlayStation
             var res = (from item in tree
                       where item is VideoGame && ((VideoGame)item).Device == "PlayStation"
                       select item).Count();
+            PrintTreeRequest2(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Второй запрос. Используется оператор Count. Метод расширения.
+        /// </summary>
+        /// <param name="tree">АВЛ-дерево.</param>
+        public static void Request2_ExMethod(MyAVLTree<Game> tree)
+        {
+            if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Запоминаем только видео-игры, в которых устройство для игры - PlayStation
+            var res = tree
+                      .Where(item => item is VideoGame && ((VideoGame)item).Device == "PlayStation")
+                      .Count();
             PrintTreeRequest2(res); // Вызов метода печати результата на экран
         }
 
@@ -700,10 +750,10 @@ namespace lab14
 
         #region Третий запрос (оператор average)
         /// <summary>
-        /// Третий запрос. Используется оператор Average.
+        /// Третий запрос. Используется оператор Average. LINQ.
         /// </summary>
         /// <param name="tree">АВЛ-дерево.</param>
-        public static void Request3(MyAVLTree<Game> tree)
+        public static void Request3_LINQ(MyAVLTree<Game> tree)
         {
             try
             {
@@ -715,6 +765,28 @@ namespace lab14
                 PrintTreeRequest3(res); // Вызов метода печати результата на экран
             }
             catch (InvalidOperationException ex) 
+            {
+                Console.WriteLine($"Ошибка! {ex.Message}.\n");
+            }
+        }
+
+        /// <summary>
+        /// Третий запрос. Используется оператор Average. Метод расширения.
+        /// </summary>
+        /// <param name="tree">АВЛ-дерево.</param>
+        public static void Request3_ExMethod(MyAVLTree<Game> tree)
+        {
+            try
+            {
+                if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
+                                                   // Подсчет среднего значения минимального количества элементов у настольных игр
+                var res = tree
+                          .Where(item => item is BoardGame)
+                          .Select(item => item.MinCount)
+                          .Average();
+                PrintTreeRequest3(res); // Вызов метода печати результата на экран
+            }
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Ошибка! {ex.Message}.\n");
             }
@@ -735,14 +807,28 @@ namespace lab14
 
         #region Четвертый запрос (оператор group by)
         /// <summary>
-        /// Четвертый запрос. Используется оператор Group by.
+        /// Четвертый запрос. Используется оператор Group by. Метод расширения.
         /// </summary>
         /// <param name="tree">АВЛ-дерево.</param>
-        public static void Request4(MyAVLTree<Game> tree)
+        public static void Request4_ExMethod(MyAVLTree<Game> tree)
         {
             if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
             // Группировка игр по названию
             var res = tree.GroupBy(game => game.Name);
+            PrintTreeRequest4(res); // Вызов метода печати результата на экран
+        }
+
+        /// <summary>
+        /// Четвертый запрос. Используется оператор Group by. LINQ.
+        /// </summary>
+        /// <param name="tree">АВЛ-дерево.</param>
+        public static void Request4_LINQ(MyAVLTree<Game> tree)
+        {
+            if (IsEmptyTree(tree)) { return; } // Если в коллекции нет элементов, выход из метода
+            // Группировка игр по названию
+            var res = from game in tree
+                      group game by game.Name into gameGroup
+                      select gameGroup;
             PrintTreeRequest4(res); // Вызов метода печати результата на экран
         }
 
@@ -792,6 +878,21 @@ namespace lab14
             UI.ChangeColor("Печать авл-дерева по уровням:\n", ConsoleColor.Green);
             tree.Print(); // Печать авл-дерева
             Console.WriteLine();
+        }
+
+        // Делегат для хранения ссылок на запросы для дерева
+        public delegate dynamic RequestHandlerTree(MyAVLTree<Game> tree);
+
+        /// <summary>
+        /// Метод обработки переданного запроса (метода) с деревом.
+        /// </summary>
+        /// <param name="tree">АВЛ-дерево.</param>
+        /// <param name="method">Метод для выполнения.</param>
+        /// <returns>Результат выполнения метода.</returns>
+        public static dynamic ActivateRequestTree(MyAVLTree<Game> tree, RequestHandlerTree method)
+        {
+            if (IsEmptyTree(tree)) { return null; } // Если коллекция пуста, возврат null
+            return method(tree); // Возврат выполнения запроса
         }
         #endregion
         #endregion

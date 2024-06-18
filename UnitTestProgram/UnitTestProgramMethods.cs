@@ -643,12 +643,12 @@ public class UnitTestProgramMethods
     /// Тест первого запроса к пустому дереву.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest1_EmptyTree()
+    public void TestTreeRequest1_EmptyTree_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(tree); // Запрос к дереву
+        Program.Request1_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
@@ -658,7 +658,7 @@ public class UnitTestProgramMethods
     /// Тест первого запроса к дереву, не содержащего корректных элементов.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest1_NoExistCorrectItems()
+    public void TestTreeRequest1_NoExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -670,7 +670,7 @@ public class UnitTestProgramMethods
             tree.Add(game); // Добавляем элементы списка в дерево
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(tree); // Запрос к дереву
+        Program.Request1_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("В дереве нет таких игр.")); // Проверка, что выведено корректное сообщение
@@ -680,7 +680,7 @@ public class UnitTestProgramMethods
     /// Тест первого запроса к дереву, содержащему корректные элементы.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest1_ExistCorrectItems()
+    public void TestTreeRequest1_ExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -692,34 +692,32 @@ public class UnitTestProgramMethods
             tree.Add(game); // Добавляем элементы списка в дерево
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request1(tree); // Запрос к дереву
+        Program.Request1_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains(new BoardGame("Игра А", 1, 50000, 1, true, "Атрибуты").ToString())); // Проверка, что выведено корректное сообщение
     }
-    #endregion
 
-    #region Тесты второго запроса
     /// <summary>
-    /// Тест второго запроса к пустому дереву.
+    /// Тест первого запроса к пустому дереву.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest2_EmptyTree()
+    public void TestTreeRequest1_EmptyTree_LINQ()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(tree); // Запрос к дереву
+        Program.Request1_LINQ(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
     }
 
     /// <summary>
-    /// Тест второго запроса к дереву, не содержащего корректных элементов.
+    /// Тест первого запроса к дереву, не содержащего корректных элементов.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest2_NoExistCorrectItems()
+    public void TestTreeRequest1_NoExistCorrectItems_LINQ()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -731,7 +729,68 @@ public class UnitTestProgramMethods
             tree.Add(game); // Добавляем элементы списка в дерево
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(tree); // Запрос к дереву
+        Program.Request1_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("В дереве нет таких игр.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест первого запроса к дереву, содержащему корректные элементы.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest1_ExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 50000, 1, true, "Атрибуты"), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        foreach (Game game in games)
+            tree.Add(game); // Добавляем элементы списка в дерево
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request1_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains(new BoardGame("Игра А", 1, 50000, 1, true, "Атрибуты").ToString())); // Проверка, что выведено корректное сообщение
+    }
+    #endregion
+
+    #region Тесты второго запроса
+    /// <summary>
+    /// Тест второго запроса к пустому дереву.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest2_EmptyTree_ExMethod()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_ExMethod(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к дереву, не содержащего корректных элементов.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest2_NoExistCorrectItems_ExMethod()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new Game("Игра А", 1, 5, 1), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        foreach (Game game in games)
+            tree.Add(game); // Добавляем элементы списка в дерево
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("В дереве нет таких игр.")); // Проверка, что выведено корректное сообщение
@@ -741,7 +800,7 @@ public class UnitTestProgramMethods
     /// Тест второго запроса к дереву, содержащему корректные элементы.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest2_ExistCorrectItems()
+    public void TestTreeRequest2_ExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -753,7 +812,66 @@ public class UnitTestProgramMethods
             tree.Add(game); // Добавляем элементы списка в дерево
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request2(tree); // Запрос к дереву
+        Program.Request2_ExMethod(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("1")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к пустому дереву.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest2_EmptyTree_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к дереву, не содержащего корректных элементов.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest2_NoExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new Game("Игра А", 1, 5, 1), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        foreach (Game game in games)
+            tree.Add(game); // Добавляем элементы списка в дерево
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("В дереве нет таких игр.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест второго запроса к дереву, содержащему корректные элементы.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest2_ExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new VideoGame("Игра А", 1, 50000, 1, "PlayStation", 5), new Game("Игра Б", 2, 7, 2),
+            new Game("Игра В", 3, 4, 3), new Game("Игра Г", 6, 9, 5)
+        };
+        foreach (Game game in games)
+            tree.Add(game); // Добавляем элементы списка в дерево
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request2_LINQ(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("1")); // Проверка, что выведено корректное сообщение
@@ -765,12 +883,12 @@ public class UnitTestProgramMethods
     /// Тест третьего запроса к пустому дереву.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest3_EmptyTree()
+    public void TestTreeRequest3_EmptyTree_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request3(tree); // Запрос к дереву
+        Program.Request3_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
@@ -780,7 +898,7 @@ public class UnitTestProgramMethods
     /// Тест третьего запроса к дереву, не содержащего корректных элементов.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest3_NoExistCorrectItems()
+    public void TestTreeRequest3_NoExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree =
         [
@@ -788,7 +906,7 @@ public class UnitTestProgramMethods
         ]; // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request3(tree); // Запрос к дереву
+        Program.Request3_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Ошибка")); // Проверка, что выведено корректное сообщение
@@ -798,7 +916,7 @@ public class UnitTestProgramMethods
     /// Тест третьего запроса к дереву, содержащему корректные элементы.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest3_ExistCorrectItems()
+    public void TestTreeRequest3_ExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         List<Game> games = new List<Game> // Создаем новый список с элементами
@@ -810,7 +928,62 @@ public class UnitTestProgramMethods
             tree.Add(game); // Добавляем элементы списка в дерево
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request3(tree); // Запрос к дереву
+        Program.Request3_ExMethod(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("1")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест третьего запроса к пустому дереву.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest3_EmptyTree_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request3_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест третьего запроса к дереву, не содержащего корректных элементов.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest3_NoExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree =
+        [
+            new Game("Игра", 0, 0, 1),
+        ]; // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request3_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Ошибка")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест третьего запроса к дереву, содержащему корректные элементы.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest3_ExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        List<Game> games = new List<Game> // Создаем новый список с элементами
+        {
+            new BoardGame("Игра А", 1, 50000, 1, true, "Атрибуты"),
+            new Game("Игра Б", 2, 7, 2),
+        };
+        foreach (Game game in games)
+            tree.Add(game); // Добавляем элементы списка в дерево
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request3_LINQ(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("1")); // Проверка, что выведено корректное сообщение
@@ -822,12 +995,12 @@ public class UnitTestProgramMethods
     /// Тест четвертого запроса к пустому дереву.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest4_EmptyTree()
+    public void TestTreeRequest4_EmptyTree_ExMethod()
     {
         MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request4(tree); // Запрос к дереву
+        Program.Request4_ExMethod(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
@@ -837,7 +1010,7 @@ public class UnitTestProgramMethods
     /// Тест четвертого запроса к дереву, содержащему корректные элементы.
     /// </summary>
     [TestMethod]
-    public void TestTreeRequest4_ExistCorrectItems()
+    public void TestTreeRequest4_ExistCorrectItems_ExMethod()
     {
         MyAVLTree<Game> tree =
         [
@@ -847,7 +1020,43 @@ public class UnitTestProgramMethods
         ]; // Создание дерева
         StringWriter sw = new StringWriter();
         Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
-        Program.Request4(tree); // Запрос к дереву
+        Program.Request4_ExMethod(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Игра (количество элементов: 2)")); // Проверка, что выведено корректное сообщение
+        Assert.IsTrue(consoleOutput.Contains("ЕщеИгра (количество элементов: 1)")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест четвертого запроса к пустому дереву.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest4_EmptyTree_LINQ()
+    {
+        MyAVLTree<Game> tree = new MyAVLTree<Game>(); // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request4_LINQ(tree); // Запрос к дереву
+        string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
+        Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
+        Assert.IsTrue(consoleOutput.Contains("Дерево не заполнено элементами.")); // Проверка, что выведено корректное сообщение
+    }
+
+    /// <summary>
+    /// Тест четвертого запроса к дереву, содержащему корректные элементы.
+    /// </summary>
+    [TestMethod]
+    public void TestTreeRequest4_ExistCorrectItems_LINQ()
+    {
+        MyAVLTree<Game> tree =
+        [
+            new Game("Игра", 0, 0, 1),
+            new Game("Игра", 1, 2, 5),
+            new Game("ЕщеИгра", 2, 4, 6)
+        ]; // Создание дерева
+        StringWriter sw = new StringWriter();
+        Console.SetOut(sw); // Перенаправляем стандартный вывод в StringWriter
+        Program.Request4_LINQ(tree); // Запрос к дереву
         string consoleOutput = sw.ToString(); // Сохраняем вывод консоли в строку
         Console.SetOut(Console.Out); // Восстанавливаем стандартный вывод
         Assert.IsTrue(consoleOutput.Contains("Игра (количество элементов: 2)")); // Проверка, что выведено корректное сообщение
